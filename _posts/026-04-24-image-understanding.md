@@ -5,6 +5,7 @@ categories: [AI Engineering, Vision, LLM]
 tags: [AI, vision, llm]
 description: A comprehensive, deep-dive guide into the understanding images with llm
 math: true
+mermaid: true
 ---
 
 ## Introduction: The Foundation of Understanding
@@ -511,6 +512,8 @@ $$\mathcal{L}_{\text{smooth}}^{\min} \approx \epsilon(1-\epsilon) + \epsilon \lo
 ---
 
 ## BLIP-2 - Bridging Frozen Models with Learnable Queries
+<img src="/assets/vision-text-alignment/Blip_1.png" alt="BLIP Architecture" style="display: block; margin: 0 auto;" />
+
 
 ### 6.1 The Motivation: Leveraging Pre-trained Giants
 
@@ -569,6 +572,8 @@ where:
 **The information bottleneck**: $L = 32$ queries must extract relevant information from $N_v \approx 196$ visual tokens. This bottleneck forces the Q-Former to learn a compressed, task-relevant representation.
 
 ### 6.3 Q-Former Architecture: Self-Attention and Cross-Attention
+
+<img src="/assets/vision-text-alignment/Blip.png" alt="BLIP Architecture" style="display: block; margin: 0 auto;" />
 
 The Q-Former consists of $M$ layers (typically $M = 12$). Each layer $\ell$ has three components:
 
@@ -1450,6 +1455,33 @@ LLaVA: "A cat is sitting on top of a table. Below the table, on the floor, there
 **Why LLaVA is better**: More visual tokens + trainable LLM allows learning complex compositional reasoning patterns.
 
 ## Qwen-VL 2.5 - Adaptive Bottlenecks and Enhanced Capabilities
+
+```mermaid
+graph TD
+    classDef query fill:#f3e5f5,stroke:#4a148c,stroke-width:2px;
+    classDef visual fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px;
+    classDef op fill:#fff3e0,stroke:#e65100,stroke-width:2px;
+
+    Q_in["Updated Queries (from Self-Attn)<br>$$\mathbf{Z}_Q \in \mathbb{R}^{L \times d_q}$$"]:::query
+    V_in["Frozen Visual Features<br>$$\mathbf{V} \in \mathbb{R}^{N_v \times d_v}$$"]:::visual
+    
+    Q_proj["Query Projection<br>$$\mathbf{Q} = \mathbf{Z}_Q \mathbf{W}_Q$$"]:::op
+    K_proj["Key Projection<br>$$\mathbf{K} = \mathbf{V} \mathbf{W}_K$$"]:::op
+    V_proj["Value Projection<br>$$\mathbf{V}_{val} = \mathbf{V} \mathbf{W}_V$$"]:::op
+    
+    Q_in --> Q_proj
+    V_in --> K_proj
+    V_in --> V_proj
+    
+    CrossAttn["Cross-Attention<br>$$\text{Softmax}(\frac{\mathbf{Q}\mathbf{K}^T}{\sqrt{d}}) \mathbf{V}_{val}$$"]:::op
+    
+    Q_proj -->|Queries| CrossAttn
+    K_proj -->|Keys| CrossAttn
+    V_proj -->|Values| CrossAttn
+    
+    OutCA["Visually-Injected Queries<br>$$\mathbf{Z}_Q^{(next)}$$"]:::query
+    CrossAttn --> OutCA
+```
 
 ## 8.1 Qwen-VL 2.5 Architecture Overview
 
