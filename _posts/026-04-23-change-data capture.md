@@ -1,6 +1,6 @@
 ---
 title: "PostgreSQL Write-Ahead Log (WAL) and Change Data Capture: A Deep Technical Analysis"
-date: 2026-04-24 12:00:00 +0000
+date: 2026-04-23 12:00:00 +0000
 categories: [Data Engineering, Database Architecture]
 tags: [postgresql, cdc, wal, mysql, database]
 description: A comprehensive, deep-dive guide into the internal mechanics of Change Data Capture using PostgreSQL's WAL, including architecture, capacity planning, and comparisons with MySQL.

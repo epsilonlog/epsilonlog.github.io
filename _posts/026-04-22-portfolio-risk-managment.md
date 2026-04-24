@@ -1,6 +1,6 @@
 ---
 title: The Mathematics of Portfolio Risk and Return (A Complete Guide)
-date: 2026-04-18 10:00:00 +0000
+date: 2026-04-22 10:00:00 +0000
 categories: [Quantitative Finance, Portfolio Management]
 tags: [math, optimization, modern-portfolio-theory, risk-management]
 math: true
