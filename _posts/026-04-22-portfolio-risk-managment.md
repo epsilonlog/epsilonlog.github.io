@@ -5,16 +5,8 @@ categories: [Quantitative Finance, Portfolio Management]
 tags: [math, optimization, modern-portfolio-theory, risk-management]
 math: true
 ---
-# The Mathematics of Portfolio Risk and Return
+# (part 1)The Mathematics of Portfolio Risk and Return
 ## A Complete Guide from First Principles to Portfolio Construction
-
----
-
-## Table of Contents
-
-1. **The Building Blocks: Returns, Risk, and Co-movement**
-2. **From Individual Assets to Portfolios**
-3. **The Power of Diversification**
 
 ---
 
@@ -398,25 +390,9 @@ Most of the diversification benefit arrives quickly. Going from 1 to 10 assets c
 
 ---
 
-# Module 4: The Efficient Frontier, Mean-Variance Optimization, CAPM & the Tangency Portfolio
+# (Part 2) The Efficient Frontier, Mean-Variance Optimization, CAPM & the Tangency Portfolio
 
----
 
-## Table of Contents
-
-1. **The Feasible Set: Where Can Portfolios Live?**
-2. **The Minimum-Variance Frontier (No Risk-Free Asset)**
-3. **The Global Minimum-Variance Portfolio (GMV)**
-4. **The Efficient Frontier**
-5. **Two-Fund Theorem**
-6. **Adding a Risk-Free Asset: The Capital Market Line**
-7. **The Tangency Portfolio**
-8. **CAPM: From the Tangency Portfolio to Beta and Alpha**
-9. **Complete Numerical Example (Three Assets + Risk-Free)**
-10. **When Assumptions Break**
-11. **Self-Check Quiz**
-
----
 
 ## 1. The Feasible Set: Where Can Portfolios Live?
 
@@ -840,48 +816,10 @@ The optimal $\delta$ can be estimated from the data. This dramatically improves 
 
 **Numerical impact:** In a 50-asset portfolio, using Ledoit-Wolf shrinkage can reduce portfolio variance by 20–30% out-of-sample compared to using the raw sample covariance matrix, simply by making $\Sigma^{-1}$ more stable.
 
-#### 10.3.2 Weight Constraints
-
-Imposing limits on individual asset weights (e.g., $w_i \in [0, 0.30]$ or $|w_i| \leq 0.25$) prevents extreme positions and acts as implicit shrinkage. The optimizer can no longer exploit tiny differences in $\hat{\mu}$ by taking huge positions.
-
-**Trade-off:** Constraints reduce the maximum achievable Sharpe ratio in-sample but often improve out-of-sample performance by preventing overfitting to noise.
-
-#### 10.3.3 Black-Litterman Model
-
-Formally blends **market equilibrium expectations** (implied by current market weights) with **investor's specific views**. The equilibrium return vector is:
-
-$$\boldsymbol{\mu}_{eq} = \lambda \Sigma \mathbf{w}_{market}$$
-
-where $\lambda$ is the market's risk aversion and $\mathbf{w}_{market}$ is the market-cap-weighted portfolio. The investor then expresses views (e.g., "I think Asset 1 will outperform Asset 2 by 3%"), and these are combined using Bayesian updating to produce a posterior $\boldsymbol{\mu}_{BL}$.
-
-**Advantage:** Produces more stable and intuitive weights because it starts from a sensible prior (the market portfolio) rather than treating all assets as blank slates.
-
-#### 10.3.4 Risk Parity
-
-Focuses on equalizing **risk contributions** rather than maximizing return. Each asset contributes equally to total portfolio variance:
-
-$$w_i \times \frac{\partial \sigma_p}{\partial w_i} = \frac{\sigma_p}{N} \quad \text{for all } i$$
-
-This requires only $\Sigma$ (not $\boldsymbol{\mu}$) and often yields more stable portfolios. The intuition: don't let a few high-volatility assets dominate the portfolio's risk.
-
-**Numerical example:** In a two-asset portfolio with $\sigma_1 = 20\%$, $\sigma_2 = 10\%$, $\rho_{12} = 0.3$, the risk parity weights are approximately $w_1 \approx 0.33$, $w_2 \approx 0.67$ — the lower-volatility asset gets more weight to equalize risk contributions.
 
 ---
 
-# Module 3: Estimation Risk and Shrinkage — Taming the Optimizer
-
----
-
-## Table of Contents
-
-1. **The Core Problem: Why Raw Estimates Fail**
-2. **Quantifying Estimation Error**
-3. **The Error Maximization Effect**
-4. **Shrinkage Estimators for Expected Returns**
-5. **Shrinkage Estimators for the Covariance Matrix**
-6. **Practical Recommendations**
-7. **Complete Numerical Example**
-8. **Self-Check Quiz**
+# ( part 3) estimation Risk and Shrinkage — Taming the Optimizer
 
 ---
 
@@ -991,6 +929,7 @@ eigenvalues = np.linalg.eigvalsh(Sigma)
 kappa = eigenvalues.max() / eigenvalues.min()
 print(f"Eigenvalues: {np.round(eigenvalues, 6)}")
 print(f"Condition number: {kappa:.1f}")
+```
 
 $$\lambda_1 = 0.0069, \quad \lambda_2 = 0.0283, \quad \lambda_3 = 0.0898$$
 
@@ -1184,17 +1123,6 @@ For $N = 50$, $K = 5$: $50(5) + 15 + 50 = 315$ parameters vs. $1,275$. A massive
 - **Weight constraints:** Even with shrinkage, impose $w_i \in [-0.10, 0.30]$ or similar bounds. This acts as implicit shrinkage and prevents extreme positions.
 - **Minimum observations per parameter:** Aim for $n / [N(N+1)/2] > 2$. If this ratio is below 1, do not use the sample covariance without shrinkage.
 
-### 6.3 The Resampled Efficiency Approach (Michaud, 1998)
-
-An alternative to analytical shrinkage:
-
-1. Estimate $\hat{\boldsymbol{\mu}}$ and $\hat{\Sigma}$ from data.
-2. Simulate $M$ bootstrap samples of $(\boldsymbol{\mu}, \Sigma)$ from the sampling distribution.
-3. For each simulated input set, solve the Markowitz optimization.
-4. Average the $M$ sets of optimal weights.
-
-The averaged weights are more stable because the extreme positions from different simulations tend to cancel out. This is essentially a Monte Carlo version of shrinkage.
-
 ---
 
 ## 7. Complete Numerical Example: Shrinkage in Action
@@ -1209,6 +1137,7 @@ Same 3 assets as before. We will compare four approaches:
 4. **Both shrinkages combined**
 
 Assume $T = 5$ years, monthly data ($n = 60$).
+
 ```python
 import numpy as np
 
@@ -1222,8 +1151,10 @@ Sigma_sample = np.array([
 ones = np.ones(3)
 N = 3
 n = 60
+```
 
-# --- James-Stein shrinkage on means ---
+# James-Stein shrinkage on means
+```python
 mu_bar = mu_sample.mean()  # grand mean = 0.1133
 # Jorion's formula
 Sigma_inv = np.linalg.inv(Sigma_sample)
@@ -1234,6 +1165,7 @@ mu_JS = (1 - delta_jorion) * mu_sample + delta_jorion * mu_bar * ones
 
 print(f"Jorion delta = {delta_jorion:.4f}")
 print(f"mu_JS = {np.round(mu_JS, 4)}")
+```
 
 **Output:**
 
@@ -1243,7 +1175,7 @@ $$\boldsymbol{\mu}_{JS} = \begin{bmatrix}0.1196\0.0728\0.1477\end{bmatrix}$$
 
 The shrinkage is mild here ($\delta = 6.4\%$) because the Mahalanobis distance of the means from the grand mean is large relative to $N$. With more assets, $\delta$ would be larger.
 
-python
+```python
 # --- Ledoit-Wolf shrinkage on covariance ---
 # Target: scaled identity
 target_var = np.trace(Sigma_sample) / N  # average variance
@@ -1259,7 +1191,7 @@ delta_LW = 0.10  # representative value
 
 Sigma_LW = (1 - delta_LW) * Sigma_sample + delta_LW * F
 print(f"Sigma_LW =\n{np.round(Sigma_LW, 5)}")
-
+```
 $$\Sigma_{LW} = (0.90)\hat{\Sigma} + (0.10)(0.04167\,I)$$
 
 $$= \begin{bmatrix}0.04017 & 0.00810 & 0.00450\0.00810 & 0.02442 & 0.01688\0.00450 & 0.01688 & 0.06042\end{bmatrix}$$
@@ -1268,7 +1200,7 @@ The off-diagonal elements shrink toward zero (by 10%), and the diagonal elements
 
 ### 7.2 Tangency Portfolios Under Each Approach
 
-python
+```python
 def tangency(mu, Sigma, Rf):
 Sinv = np.linalg.inv(Sigma)
 pi = mu - Rf * np.ones(len(mu))
@@ -1291,7 +1223,7 @@ w, mu_p, sig_p, sr = tangency(mu, Sig, Rf)
 print(f"\n{name}:")
 print(f"  w = [{w[0]:.3f}, {w[1]:.3f}, {w[2]:.3f}]")
 print(f"  μ = {mu_p:.2%}, σ = {sig_p:.2%}, Sharpe = {sr:.4f}")
-
+```
 **Results:**
 
 | Approach | $w_1$ | $w_2$ | $w_3$ | $\mu_p$ | $\sigma_p$ | Sharpe |
@@ -1313,7 +1245,7 @@ With only 3 assets, the differences are modest. This is expected — shrinkage m
 
 To show the dramatic effect with larger $N$, here is a simulation:
 
-python
+```python
 np.random.seed(42)
 N_large = 30
 n_obs = 60
@@ -1334,7 +1266,7 @@ kappa_true = np.linalg.cond(Sigma_true)
 kappa_sample = np.linalg.cond(Sigma_hat)
 print(f"Condition number (true):   {kappa_true:.1f}")
 print(f"Condition number (sample): {kappa_sample:.1f}")
-
+```
 **Typical output:**
 
 $$\kappa(\Sigma_{true}) \approx 45, \qquad \kappa(\hat{\Sigma}) \approx 850$$
